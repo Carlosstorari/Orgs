@@ -24,10 +24,12 @@ class FormularioProdutoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+        title = "Cadastrar produto"
         configuraBotaoSalvar()
         binding.activityProdutoFormularioImagem.setOnClickListener {
             FormularioImagemDialog(this)
-                .mostra { imagem ->
+                .mostra(url) { imagem ->
                     url = imagem
                     binding.activityProdutoFormularioImagem.tentaCarregarImagem(url)
                 }
@@ -35,7 +37,6 @@ class FormularioProdutoActivity : AppCompatActivity() {
     }
 
     private fun configuraBotaoSalvar() {
-        setContentView(binding.root)
         val dao = ProdutosDao()
         binding.activityFormularioProdutoBtnSalvar.setOnClickListener {
             val produto = criaProduto()
