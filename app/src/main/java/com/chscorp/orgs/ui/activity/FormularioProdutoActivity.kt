@@ -12,6 +12,7 @@ import com.chscorp.orgs.databinding.ActivityFormularioProdutoBinding
 import com.chscorp.orgs.databinding.FormularioImagemBinding
 import com.chscorp.orgs.extensions.tentaCarregarImagem
 import com.chscorp.orgs.model.Produto
+import com.chscorp.orgs.ui.dialog.FormularioImagemDialog
 import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity() {
@@ -25,22 +26,11 @@ class FormularioProdutoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         configuraBotaoSalvar()
         binding.activityProdutoFormularioImagem.setOnClickListener {
-            val bindingFormularioImagem = FormularioImagemBinding.inflate(layoutInflater)
-            bindingFormularioImagem.formularioImagemBotaoCarregar.setOnClickListener {
-                val url = bindingFormularioImagem.formularioImagemUrl.text.toString()
-                bindingFormularioImagem.formularioImagemImageview.tentaCarregarImagem(url)
-            }
-
-            AlertDialog.Builder(this)
-                .setView(bindingFormularioImagem.root)
-                .setPositiveButton("Confirmar") {_, _ ->
-                    url = bindingFormularioImagem.formularioImagemUrl.text.toString()
+            FormularioImagemDialog(this)
+                .mostra { imagem ->
+                    url = imagem
                     binding.activityProdutoFormularioImagem.tentaCarregarImagem(url)
                 }
-                .setNegativeButton("Cancelar") {_, _ ->
-
-                }
-                .show()
         }
     }
 
