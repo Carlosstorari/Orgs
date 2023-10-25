@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.chscorp.orgs.R
 import com.chscorp.orgs.databinding.ProdutoItemBinding
+import com.chscorp.orgs.extensions.tentaCarregarImagem
 import com.chscorp.orgs.model.Produto
 import java.text.NumberFormat
 import java.util.Locale
@@ -27,6 +29,19 @@ class ListaProdutosAdapter(
                 val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "br"))
                 val valorEmMoeda = formatador.format(produto.valor)
                 produtoItemValor.text = valorEmMoeda
+
+                /**Exibe imagem de erro quando conteudo da imagem for nulo,
+                 * OUTRA FORMA DA LIDAR COM O ERRO*/
+                val visibilidade = if (produto.imagem != null) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+
+                binding.imageView.visibility = visibilidade
+                /***********************************************************/
+
+                binding.imageView.tentaCarregarImagem(produto.imagem)
             }
         }
     }

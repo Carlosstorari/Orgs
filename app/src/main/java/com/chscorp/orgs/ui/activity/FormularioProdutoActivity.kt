@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import coil.load
 import com.chscorp.orgs.R
 import com.chscorp.orgs.dao.ProdutosDao
 import com.chscorp.orgs.databinding.ActivityFormularioProdutoBinding
+import com.chscorp.orgs.databinding.FormularioImagemBinding
+import com.chscorp.orgs.extensions.tentaCarregarImagem
 import com.chscorp.orgs.model.Produto
 import java.math.BigDecimal
 
@@ -16,15 +19,23 @@ class FormularioProdutoActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityFormularioProdutoBinding.inflate(layoutInflater)
     }
+    private var url: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         configuraBotaoSalvar()
         binding.activityProdutoFormularioImagem.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setView(R.layout.formulario_imagem)
-                .setPositiveButton("Confirmar") {_, _ ->
+            val bindingFormularioImagem = FormularioImagemBinding.inflate(layoutInflater)
+            bindingFormularioImagem.formularioImagemBotaoCarregar.setOnClickListener {
+                val url = bindingFormularioImagem.formularioImagemUrl.text.toString()
+                bindingFormularioImagem.formularioImagemImageview.tentaCarregarImagem(url)
+            }
 
+            AlertDialog.Builder(this)
+                .setView(bindingFormularioImagem.root)
+                .setPositiveButton("Confirmar") {_, _ ->
+                    url = bindingFormularioImagem.formularioImagemUrl.text.toString()
+                    binding.activityProdutoFormularioImagem.tentaCarregarImagem(url)
                 }
                 .setNegativeButton("Cancelar") {_, _ ->
 
@@ -56,7 +67,8 @@ class FormularioProdutoActivity : AppCompatActivity() {
         val produto = Produto(
             nome = nome,
             descricao = descricao,
-            valor = valor
+            valor = valor,
+            imagem = url
         )
         return produto
     }
