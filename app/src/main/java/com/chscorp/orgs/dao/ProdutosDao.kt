@@ -1,6 +1,7 @@
 package com.chscorp.orgs.dao
 
 import com.chscorp.orgs.model.Produto
+import java.math.BigDecimal
 
 class ProdutosDao {
 
@@ -13,6 +14,67 @@ class ProdutosDao {
     }
 
     companion object {
-        private val produtos = mutableListOf<Produto>()
+        private val produtos = mutableListOf<Produto>(
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            ),
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            ),
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            ),
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            ),
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            ),
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            ),
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            ),
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            ),
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            ),
+            Produto(
+                nome = "laranja",
+                descricao = "varias laranjas",
+                valor = BigDecimal("1029"),
+                imagem = "https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/imagens/frutas.jpg"
+            )
+        )
     }
 }

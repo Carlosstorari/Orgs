@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.chscorp.orgs.R
 import com.chscorp.orgs.databinding.ProdutoItemBinding
 import com.chscorp.orgs.extensions.tentaCarregarImagem
 import com.chscorp.orgs.model.Produto
+import com.chscorp.orgs.ui.DescricaoFragment
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -57,6 +59,21 @@ class ListaProdutosAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val produto = produtos[position]
         holder.vincula(produto)
+        holder.itemView.setOnClickListener { view ->
+            val fragment = DescricaoFragment.newInstance(
+                produto.imagem,
+                produto.valor.toString(),
+                produto.nome,
+                produto.descricao
+            )
+
+            val activity = view!!.context as AppCompatActivity
+            activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     fun atualiza(produtos: List<Produto>) {
