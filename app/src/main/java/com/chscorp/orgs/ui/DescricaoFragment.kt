@@ -14,15 +14,11 @@ import java.util.Locale
 
 class DescricaoFragment : Fragment() {
     private lateinit var binding: FragmentDescricaoBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity)?.supportActionBar?.hide()
         binding = FragmentDescricaoBinding
             .inflate(inflater, container, false)
             .apply {
@@ -33,6 +29,16 @@ class DescricaoFragment : Fragment() {
                 descricaoProduto.text = arguments?.getString("descricao")
             }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity)?.supportActionBar?.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity)?.supportActionBar?.show()
     }
 
     companion object {

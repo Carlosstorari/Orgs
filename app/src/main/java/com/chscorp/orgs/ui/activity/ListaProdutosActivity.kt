@@ -32,7 +32,6 @@ class ListaProdutosActivity: AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         adapter.atualiza(dao.buscaTodos())
-        (this as AppCompatActivity)?.supportActionBar?.show()
     }
 
     private fun configuraFab() {
