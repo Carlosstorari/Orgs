@@ -2,14 +2,9 @@ package com.chscorp.orgs.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
-import coil.load
-import com.chscorp.orgs.R
-import com.chscorp.orgs.dao.ProdutosDao
+import androidx.room.Room
+import com.chscorp.orgs.database.AppDatabase
 import com.chscorp.orgs.databinding.ActivityFormularioProdutoBinding
-import com.chscorp.orgs.databinding.FormularioImagemBinding
 import com.chscorp.orgs.extensions.tentaCarregarImagem
 import com.chscorp.orgs.model.Produto
 import com.chscorp.orgs.ui.dialog.FormularioImagemDialog
@@ -37,10 +32,11 @@ class FormularioProdutoActivity : AppCompatActivity() {
     }
 
     private fun configuraBotaoSalvar() {
-        val dao = ProdutosDao()
         binding.activityFormularioProdutoBtnSalvar.setOnClickListener {
+            val db = AppDatabase.instancia(this)
+            val produtoDao = db.produtoDao()
             val produto = criaProduto()
-            dao.adiciona(produto)
+            produtoDao.salva(produto)
             finish()
         }
     }
