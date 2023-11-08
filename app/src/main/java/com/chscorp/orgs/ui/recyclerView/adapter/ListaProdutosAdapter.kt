@@ -1,13 +1,13 @@
 package com.chscorp.orgs.ui.recyclerView.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.chscorp.orgs.R
 import com.chscorp.orgs.databinding.ProdutoItemBinding
 import com.chscorp.orgs.extensions.tentaCarregarImagem
@@ -16,6 +16,7 @@ import com.chscorp.orgs.ui.DescricaoFragment
 import java.text.NumberFormat
 import java.util.Locale
 
+private const val  TAG = "DetalhesProduto"
 class ListaProdutosAdapter(
     private val context: Context,
     produtos: List<Produto> = emptyList()
@@ -73,6 +74,25 @@ class ListaProdutosAdapter(
                 .replace(R.id.main_container, fragment)
                 .addToBackStack(null)
                 .commit()
+        }
+
+        holder.itemView.setOnLongClickListener {
+            PopupMenu(context, holder.itemView).apply {
+                menuInflater.inflate(R.menu.menu_detalhes_produto, this.menu)
+                setOnMenuItemClickListener {
+                    when(it.itemId) {
+                        R.id.menu_detalhes_produto_editar -> {
+                            Log.i(TAG, "onOptionsItemSelected: Editar")
+                        }
+                        R.id.menu_detalhes_produto_remover -> {
+                            Log.i(TAG, "onOptionsItemSelected: Remover")
+                        }
+                    }
+                    true
+                }
+                show()
+            }
+            return@setOnLongClickListener true
         }
     }
 

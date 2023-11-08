@@ -1,20 +1,25 @@
 package com.chscorp.orgs.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import com.chscorp.orgs.R
 import com.chscorp.orgs.databinding.FragmentDescricaoBinding
 import com.chscorp.orgs.extensions.tentaCarregarImagem
 import java.text.NumberFormat
 import java.util.Locale
 
-
-class DescricaoFragment : Fragment() {
+private const val  TAG = "DetalhesProduto"
+class DescricaoFragment : Fragment(), MenuProvider {
     private lateinit var binding: FragmentDescricaoBinding
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,14 +36,9 @@ class DescricaoFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity)?.supportActionBar?.hide()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity)?.supportActionBar?.show()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, lifecycle.currentState)
     }
 
     companion object {
@@ -56,6 +56,22 @@ class DescricaoFragment : Fragment() {
                 putString("descricao", descricaoProduto)
             }
         }
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_detalhes_produto, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        when(menuItem.itemId) {
+            R.id.menu_detalhes_produto_editar -> {
+                Log.i(TAG, "onOptionsItemSelected: Editar")
+            }
+            R.id.menu_detalhes_produto_remover -> {
+                Log.i(TAG, "onOptionsItemSelected: Remover")
+            }
+        }
+        return super.onContextItemSelected(menuItem)
     }
 
 }
