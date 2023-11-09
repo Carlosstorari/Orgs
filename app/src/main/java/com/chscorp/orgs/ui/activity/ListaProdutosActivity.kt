@@ -28,6 +28,13 @@ class ListaProdutosActivity: AppCompatActivity() {
         adapter.atualiza(produtoDao.buscaTodos())
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        val db = AppDatabase.instancia(this)
+        val produtoDao = db.produtoDao()
+        adapter.atualiza(produtoDao.buscaTodos())
+    }
+
     private fun configuraFab() {
         binding.activityListaProdutoFab.setOnClickListener {
             val intent = Intent(this, FormularioProdutoActivity::class.java)

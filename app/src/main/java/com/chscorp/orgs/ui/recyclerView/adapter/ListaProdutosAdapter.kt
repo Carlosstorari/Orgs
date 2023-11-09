@@ -61,12 +61,7 @@ class ListaProdutosAdapter(
         val produto = produtos[position]
         holder.vincula(produto)
         holder.itemView.setOnClickListener { view ->
-            val fragment = DescricaoFragment.newInstance(
-                produto.imagem,
-                produto.valor.toString(),
-                produto.nome,
-                produto.descricao
-            )
+            val fragment = DescricaoFragment.newInstance(produto)
 
             val activity = view!!.context as AppCompatActivity
             activity.supportFragmentManager
