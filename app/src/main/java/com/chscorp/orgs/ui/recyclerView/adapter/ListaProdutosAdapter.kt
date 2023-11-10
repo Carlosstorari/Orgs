@@ -6,32 +6,41 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.chscorp.orgs.R
 import com.chscorp.orgs.databinding.ProdutoItemBinding
+import com.chscorp.orgs.extensions.formataParaMoedaBrasileira
 import com.chscorp.orgs.extensions.tentaCarregarImagem
 import com.chscorp.orgs.model.Produto
-import com.chscorp.orgs.ui.DescricaoFragment
-import java.text.NumberFormat
-import java.util.Locale
 
 private const val  TAG = "DetalhesProduto"
 class ListaProdutosAdapter(
     private val context: Context,
-    produtos: List<Produto> = emptyList()
+    produtos: List<Produto> = emptyList(),
+    var quandoClicaNoItem: (produto: Produto) -> Unit = {}
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
     private val produtos = produtos.toMutableList()
 
-    class ViewHolder(private val binding: ProdutoItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ProdutoItemBinding): RecyclerView.ViewHolder(binding.root) {
+        private lateinit var produto: Produto
+        init {
+            itemView.setOnClickListener{
+                if (::produto.isInitialized) {
+                    quandoClicaNoItem(produto)
+                }
+            }
+        }
         fun vincula(produto: Produto) {
-            binding.apply {
-                produtoItemName.text = produto.nome
-                produtoItemDescricao.text = produto.descricao
-                val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "br"))
-                val valorEmMoeda = formatador.format(produto.valor)
-                produtoItemValor.text = valorEmMoeda
+            this.produto = produto
+            val nome = binding.produtoItemName
+            nome.text = produto.nome
+            val descricao = binding.produtoItemDescricao
+            descricao.text = produto.descricao
+            val valor = binding.produtoItemValor
+            val valorEmMoeda: String = produto.valor
+                .formataParaMoedaBrasileira()
+            valor.text = valorEmMoeda
 
                 /**Exibe imagem de erro quando conteudo da imagem for nulo,
                  * OUTRA FORMA DA LIDAR COM O ERRO*/
@@ -45,7 +54,7 @@ class ListaProdutosAdapter(
                 /***********************************************************/
 
                 binding.imageView.tentaCarregarImagem(produto.imagem)
-            }
+
         }
     }
 
@@ -60,16 +69,6 @@ class ListaProdutosAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val produto = produtos[position]
         holder.vincula(produto)
-        holder.itemView.setOnClickListener { view ->
-            val fragment = DescricaoFragment.newInstance(produto)
-
-            val activity = view!!.context as AppCompatActivity
-            activity.supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.main_container, fragment)
-                .addToBackStack(null)
-                .commit()
-        }
 
         holder.itemView.setOnLongClickListener {
             PopupMenu(context, holder.itemView).apply {
