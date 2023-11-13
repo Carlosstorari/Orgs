@@ -52,6 +52,7 @@ class DescricaoActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.menu_detalhes_produto_remover -> {
                 produtoDao.remove(produtoDesc)
+                finish()
             }
             R.id.menu_detalhes_produto_editar -> {
                 Log.i(TAG, "onOptionsItemSelected: editar")
