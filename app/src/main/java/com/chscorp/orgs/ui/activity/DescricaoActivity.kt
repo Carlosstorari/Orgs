@@ -1,5 +1,6 @@
 package com.chscorp.orgs.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -12,24 +13,36 @@ import com.chscorp.orgs.extensions.formataParaMoedaBrasileira
 import com.chscorp.orgs.extensions.tentaCarregarImagem
 import com.chscorp.orgs.model.Produto
 
-private const val TAG = "DetalhesProduto"
-private lateinit var produtoDesc: Produto
+private var produtoDesc: Produto? = null
+
 class DescricaoActivity : AppCompatActivity() {
+    private var produtoId: Long = 0L
     private val binding by lazy {
         ActivityDescricaoBinding.inflate(layoutInflater)
     }
+    private val produtoDao by lazy {
+        AppDatabase.instancia(this).produtoDao()
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         tentaCarregarProduto()
     }
 
-    private fun tentaCarregarProduto() {
-        intent.getParcelableExtra<Produto>(CHAVE_PRODUTO)?.let { produtoCarregado ->
-            preencheCampos(produtoCarregado)
+    override fun onResume() {
+        super.onResume()
+        produtoDesc = produtoDao.buscaPorId(produtoId)
+
+        produtoDesc?.let {
+            preencheCampos(it)
         } ?: finish()
     }
+
+    private fun tentaCarregarProduto() {
+        produtoId = intent.getLongExtra(CHAVE_PRODUTO_ID, 0L)
+    }
+
     private fun preencheCampos(produtoCarregado: Produto) {
         with(binding) {
             imagemDescricao.tentaCarregarImagem(produtoCarregado.imagem)
@@ -47,15 +60,18 @@ class DescricaoActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val db = AppDatabase.instancia(this)
-        val produtoDao = db.produtoDao()
-        when(item.itemId){
+        when (item.itemId) {
             R.id.menu_detalhes_produto_remover -> {
-                produtoDao.remove(produtoDesc)
+                produtoDesc?.let { produtoDao.remove(it) }
+
                 finish()
             }
+
             R.id.menu_detalhes_produto_editar -> {
-                Log.i(TAG, "onOptionsItemSelected: editar")
+                Intent(this, FormularioProdutoActivity::class.java).apply {
+                    putExtra(CHAVE_PRODUTO_ID, produtoId)
+                    startActivity(this)
+                }
             }
         }
         return super.onOptionsItemSelected(item)
