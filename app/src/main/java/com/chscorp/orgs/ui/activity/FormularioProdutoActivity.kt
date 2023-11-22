@@ -7,6 +7,11 @@ import com.chscorp.orgs.databinding.ActivityFormularioProdutoBinding
 import com.chscorp.orgs.extensions.tentaCarregarImagem
 import com.chscorp.orgs.model.Produto
 import com.chscorp.orgs.ui.dialog.FormularioImagemDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity() {
@@ -20,6 +25,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
         val db = AppDatabase.instancia(this)
         db.produtoDao()
     }
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +34,8 @@ class FormularioProdutoActivity : AppCompatActivity() {
         configuraBotaoSalvar()
         binding.activityProdutoFormularioImagem.setOnClickListener {
             FormularioImagemDialog(this)
-                .mostra(url) { imagem ->/**---------------------------------*/
+                .mostra(url) { imagem ->
+                    /**---------------------------------*/
                     url = imagem
                     binding.activityProdutoFormularioImagem.tentaCarregarImagem(url)
                 }
@@ -42,9 +49,14 @@ class FormularioProdutoActivity : AppCompatActivity() {
     }
 
     private fun tentaBuscarProdutoNoBancoDeDados() {
-        produtoDao.buscaPorId(produtoId)?.let {
-            preencheCampos(it)
+        scope.launch {
+            produtoDao.buscaPorId(produtoId)?.let {
+                withContext(Dispatchers.Main) {
+                    preencheCampos(it)
+                }
+            }
         }
+
     }
 
     private fun tentaCarregarProduto() {
@@ -69,9 +81,11 @@ class FormularioProdutoActivity : AppCompatActivity() {
 //            } else {
 //                produtoDao.salva(produto)
 //            }
+            scope.launch {
+                produtoDao.salva(produto)
+                finish()
+            }
 
-            produtoDao.salva(produto)
-            finish()
         }
     }
 
@@ -86,7 +100,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
         }
 
         val produto = Produto(
-            id= produtoId,
+            id = produtoId,
             nome = nome,
             descricao = descricao,
             valor = valor,

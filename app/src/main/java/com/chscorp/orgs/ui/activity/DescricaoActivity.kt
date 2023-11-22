@@ -12,6 +12,10 @@ import com.chscorp.orgs.databinding.ActivityDescricaoBinding
 import com.chscorp.orgs.extensions.formataParaMoedaBrasileira
 import com.chscorp.orgs.extensions.tentaCarregarImagem
 import com.chscorp.orgs.model.Produto
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private var produtoDesc: Produto? = null
 
@@ -23,6 +27,7 @@ class DescricaoActivity : AppCompatActivity() {
     private val produtoDao by lazy {
         AppDatabase.instancia(this).produtoDao()
     }
+    val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +37,14 @@ class DescricaoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        produtoDesc = produtoDao.buscaPorId(produtoId)
-
-        produtoDesc?.let {
-            preencheCampos(it)
-        } ?: finish()
+        scope.launch {
+            produtoDesc = produtoDao.buscaPorId(produtoId)
+            withContext(Dispatchers.Main) {
+                produtoDesc?.let {
+                    preencheCampos(it)
+                } ?: finish()
+            }
+        }
     }
 
     private fun tentaCarregarProduto() {
@@ -62,9 +70,10 @@ class DescricaoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_detalhes_produto_remover -> {
-                produtoDesc?.let { produtoDao.remove(it) }
-
-                finish()
+                scope.launch {
+                    produtoDesc?.let { produtoDao.remove(it) }
+                    finish()
+                }
             }
 
             R.id.menu_detalhes_produto_editar -> {
